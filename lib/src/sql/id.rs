@@ -32,6 +32,12 @@ pub enum Id {
 	Generate(Gen),
 }
 
+impl Default for Id {
+    fn default() -> Self {
+        Self::String("".to_string())
+    }
+}
+
 impl From<i64> for Id {
 	fn from(v: i64) -> Self {
 		Self::Number(v)

@@ -3868,7 +3868,7 @@ dependencies = [
  "http 0.2.11",
  "opentelemetry",
  "opentelemetry-proto",
- "prost",
+ "prost 0.11.9",
  "thiserror",
  "tokio",
  "tonic 0.8.3",
@@ -3883,7 +3883,7 @@ dependencies = [
  "futures",
  "futures-util",
  "opentelemetry",
- "prost",
+ "prost 0.11.9",
  "tonic 0.8.3",
 ]
 
@@ -4373,7 +4373,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b82eaa1d779e9a4bc1c3217db8ffbeabaae1dca241bf70183242128d48681cd"
 dependencies = [
  "bytes",
- "prost-derive",
+ "prost-derive 0.11.9",
+]
+
+[[package]]
+name = "prost"
+version = "0.12.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "146c289cda302b98a28d40c8b3b90498d6e526dd24ac2ecea73e4e491685b94a"
+dependencies = [
+ "bytes",
+ "prost-derive 0.12.3",
 ]
 
 [[package]]
@@ -4387,6 +4397,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "prost-derive"
+version = "0.12.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "efb6c9a1dd1def8e2124d17e83a20af56f1570d6c2d2bd9e266ccb768df3840e"
+dependencies = [
+ "anyhow",
+ "itertools 0.11.0",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.48",
 ]
 
 [[package]]
@@ -5776,6 +5799,7 @@ dependencies = [
  "phf",
  "pin-project-lite",
  "pprof",
+ "prost 0.12.3",
  "quick_cache",
  "radix_trie",
  "rand 0.8.5",
@@ -5869,7 +5893,7 @@ dependencies = [
  "log",
  "pin-project",
  "prometheus",
- "prost",
+ "prost 0.11.9",
  "rand 0.8.5",
  "regex",
  "semver",
@@ -6341,8 +6365,8 @@ dependencies = [
  "hyper-timeout",
  "percent-encoding",
  "pin-project",
- "prost",
- "prost-derive",
+ "prost 0.11.9",
+ "prost-derive 0.11.9",
  "tokio",
  "tokio-stream",
  "tokio-util",
@@ -6373,7 +6397,7 @@ dependencies = [
  "hyper-timeout",
  "percent-encoding",
  "pin-project",
- "prost",
+ "prost 0.11.9",
  "rustls-pemfile",
  "tokio",
  "tokio-rustls",

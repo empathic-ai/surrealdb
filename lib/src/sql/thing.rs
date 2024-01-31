@@ -5,11 +5,14 @@ use crate::err::Error;
 use crate::sql::{escape::escape_rid, id::Id, Strand, Value};
 use crate::syn;
 use derive::Store;
+use prost::DecodeError;
 use revision::revisioned;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 use bevy::prelude::Reflect;
+use prost::encoding::WireType;
+use prost::encoding::DecodeContext;
 
 pub(crate) const TOKEN: &str = "$surrealdb::private::sql::Thing";
 
@@ -21,6 +24,70 @@ pub struct Thing {
 	/// Table name
 	pub tb: String,
 	pub id: Id,
+}
+
+// See for guidance:
+// https://github.com/tokio-rs/prost/issues/882
+impl ::prost::Message for Thing {
+    fn encode_raw<B>(&self, buf: &mut B)
+    where
+        B: bytes::BufMut,
+        Self: Sized {
+		let str = format!("{}:{}", self.tb, self.id.to_string());
+		prost::encoding::string::encode(1u32, &str, buf);
+    }
+
+    fn merge_field<B>(
+        &mut self,
+        tag: u32,
+        wire_type: WireType,
+        buf: &mut B,
+        ctx: DecodeContext,
+    ) -> Result<(), prost::DecodeError>
+    where
+        B: bytes::Buf,
+        Self: Sized {
+
+		let err_ctx = |mut error: DecodeError| {
+			error.push("Foo", "int_or_string");
+			error
+		};
+
+		match tag {
+			1u32 => {
+				match wire_type {
+					WireType::LengthDelimited => {
+						let mut value = String::new();
+						prost::encoding::string::merge(wire_type, &mut value, buf, ctx)
+							.map_err(err_ctx)?;
+
+						let values: Vec<&str> = value.split(':').collect();
+
+						self.tb = values[0].to_string();
+						self.id = Id::String(values[1].to_string());
+						Ok(())
+					},
+					_ =>
+						Err(err_ctx(DecodeError::new(format!(
+							"invalid wire type: {:?} (expected {:?} or {:?})",
+							wire_type, WireType::Varint, WireType::LengthDelimited
+						)))
+					)
+				}
+			},
+			_ => prost::encoding::skip_field(wire_type, tag, buf, ctx),
+		}
+    }
+
+    fn encoded_len(&self) -> usize {
+		let str = format!("{}:{}", self.tb, self.id.to_string());
+		prost::encoding::string::encoded_len(1u32, &str)
+    }
+
+    fn clear(&mut self) {
+		self.tb = "".to_string();
+        self.id = Id::String("".to_string());
+    }
 }
 
 impl From<(&str, Id)> for Thing {
