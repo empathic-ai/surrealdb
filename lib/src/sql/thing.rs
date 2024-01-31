@@ -26,6 +26,12 @@ pub struct Thing {
 	pub id: Id,
 }
 
+impl Default for Thing {
+    fn default() -> Self {
+        Self { tb: Default::default(), id: Default::default() }
+    }
+}
+
 // See for guidance:
 // https://github.com/tokio-rs/prost/issues/882
 impl ::prost::Message for Thing {
@@ -85,8 +91,8 @@ impl ::prost::Message for Thing {
     }
 
     fn clear(&mut self) {
-		self.tb = "".to_string();
-        self.id = Id::String("".to_string());
+		self.tb = Default::default();
+        self.id = Default::default();
     }
 }
 
