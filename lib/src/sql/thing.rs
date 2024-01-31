@@ -9,10 +9,11 @@ use revision::revisioned;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
+use bevy::prelude::Reflect;
 
 pub(crate) const TOKEN: &str = "$surrealdb::private::sql::Thing";
 
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize, Store, Hash)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize, Store, Hash, Reflect)]
 #[serde(rename = "$surrealdb::private::sql::Thing")]
 #[revisioned(revision = 1)]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
